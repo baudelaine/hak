@@ -1,0 +1,56 @@
+{
+  "cloudantNoSQLDB": [
+   {
+    "credentials": {
+     "host": "9e22cc61-4746-461c-8669-197dd61de924-bluemix.cloudant.com",
+     "password": "9eeccb172c97e0d3fb4ffac6b944daa7622b4b0dff9855296cff679a3129c3a5",
+     "port": 443,
+     "url": "https://9e22cc61-4746-461c-8669-197dd61de924-bluemix:9eeccb172c97e0d3fb4ffac6b944daa7622b4b0dff9855296cff679a3129c3a5@9e22cc61-4746-461c-8669-197dd61de924-bluemix.cloudant.com",
+     "username": "9e22cc61-4746-461c-8669-197dd61de924-bluemix"
+    },
+    "label": "cloudantNoSQLDB",
+    "name": "db0",
+    "plan": "Lite",
+    "provider": null,
+    "syslog_drain_url": null,
+    "tags": [
+     "data_management",
+     "ibm_created",
+     "lite",
+     "ibm_dedicated_public"
+    ],
+    "volume_mounts": []
+   }
+  ],
+  "user-provided": [
+   {
+    "credentials": {
+     "ipAddress": "193.251.53.223",
+     "loggers": [
+      {
+       "flag": 900,
+       "tid": "AC61D447924A",
+       "uid": "MOBILI"
+      },
+      {
+       "flag": 900,
+       "tid": "AC61D447924A",
+       "uid": "MOBILI"
+      },
+      {
+       "flag": 900,
+       "tid": "AC61D447924A",
+       "uid": "MOBILI"
+      }
+     ],
+     "packetSize": 10000,
+     "port": 5100
+    },
+    "label": "user-provided",
+    "name": "hak0",
+    "syslog_drain_url": "",
+    "tags": [],
+    "volume_mounts": []
+   }
+  ]
+}

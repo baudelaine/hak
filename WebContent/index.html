@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hear and Know - C-Cada logger</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-table.css">
+    <link rel="stylesheet" href="css/bootstrap-editable.css">
+    <link rel="stylesheet" href="css/bootstrap-select.min.css">
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+    <div class="container-fluid" style="margin-top: 10px;">
+      <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#">
+              <img alt="Brand" src="img/hak.jpg"><br>
+              <strong>C-Cada logger</strong>
+            </a>
+          </div>
+
+          <form class="navbar-form navbar-brand navbar-left">
+
+          </form>
+
+          <form class="navbar-form navbar-brand navbar-right">
+            <img src="img/scalezone.png">
+            <img src="img/ibm.bluemix.jpg"><br>
+            <small><a href="https://www-304.ibm.com/partnerworld/wps/servlet/ContentHandler/isv_inv_tsp_iic_paris_overview">Delivered by BPSH Paris </a></small>
+
+          </form>
+
+        </div>
+      </nav>
+      <div id="Loading"></div>
+      <div id="Alert"></div>
+      <div class="toolbar form-inline">
+          <select class="selectpicker" id="SelectLogger" data-show-subtext="true" data-live-search="true" title="Select a logger..."></select>
+          <button type="button" onclick="GetLoggerDatas()" class="btn btn-default dropdown-toggle" data-toggle="tooltip" data-placement="top" title="Get datas from logger."><span class="glyphicon glyphicon-magnet" aria-hidden="true"></span></button>
+      </div>
+      <table id="LoggerDatas"
+        data-toolbar="toolbar">
+      </table>
+    </div>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap-table.js"></script>
+    <script src="js/bootstrap-table-editable.js"></script>
+    <script src="js/bootstrap-editable.js"></script>
+    <script src="js/bootstrap-select.min.js"></script>
+    <script src="js/index.js"></script>
+</body>
+</html>

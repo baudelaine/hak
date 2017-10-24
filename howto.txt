@@ -1,0 +1,25 @@
+#Display usage:
+
+curl  http://localhost/app0/CCadaLogger
+
+#Test Cloudant connection
+
+curl -H "Content-Type: application/json" -X POST -d '{"action": "tstdbconn"}'  http://localhost/app0/CCadaLogger
+
+#Test Hear and Know UDP server connection
+
+curl -H "Content-Type: application/json" -X POST -d '{"action": "tstsrvconn"}'  http://localhost/app0/CCadaLogger
+
+#Get logger list register from hak service register in Bluemix 
+
+curl -H "Content-Type: application/json" -X POST -d '{"action": "getloggers"}'  http://localhost/app0/CCadaLogger
+
+#Get position from logger via hak service register in Bluemix
+
+curl -H "Content-Type: application/json" -X POST -d '{"action": "getpositions", "logger": {"flag": 900, "uid":"MOBILI", "tid": "AC61D447924A" }}'  http://localhost/app0/CCadaLogger
+
+#Backup a json Logger Array file in Cloudant
+
+curl -X POST -F 'parms={"action": "savetoDb"}' -F 'backup=@bak0.json'  http://localhost/app0/CCadaLogger
+
+

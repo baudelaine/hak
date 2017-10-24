@@ -1,0 +1,68 @@
+{
+  "REQ_PARMS": {
+    "action": "getPositions",
+    "logger": {
+      "flag": 900,
+      "tid": "AC61D447924A",
+      "uid": "MOBILI"
+    }
+  },
+  "FROM": "CCadaLoggerServlet",
+  "RESPONSE": {
+    "flag": 900,
+    "uid": "MOBILI",
+    "tid": "AC61D447924A",
+    "positions": [
+      {
+        "lat": 48,
+        "lng": 2,
+        "timestamp": 1508654712
+      },
+      {
+        "lat": 48,
+        "lng": 2,
+        "timestamp": 1508543839
+      },
+      {
+        "lat": 48,
+        "lng": 2,
+        "timestamp": 1508543654
+      },
+      {
+        "lat": 48,
+        "lng": 2,
+        "timestamp": 1508543575
+      },
+      {
+        "lat": 48,
+        "lng": 2,
+        "timestamp": 1508543529
+      },
+      {
+        "lat": 48,
+        "lng": 2,
+        "timestamp": 1508543521
+      },
+      {
+        "lat": 48,
+        "lng": 2,
+        "timestamp": 1508543504
+      },
+      {
+        "lat": 48,
+        "lng": 2,
+        "timestamp": 1508543498
+      },
+      {
+        "lat": 48,
+        "lng": 2,
+        "timestamp": 1508543491
+      },
+      {
+        "lat": 48,
+        "lng": 2,
+        "timestamp": 1508543307
+      }
+    ]
+  }
+}

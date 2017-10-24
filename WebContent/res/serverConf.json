@@ -1,0 +1,10 @@
+{
+	"ipAddress": "193.251.53.223",
+	"port": 5100,
+	"packetSize": 10000,
+	"loggers": [
+	  {"flag":900, "tid":"AC61D447924A", "uid":"MOBILI"},
+	  {"flag":900, "tid":"AC61D447924A", "uid":"MOBILI"},
+	  {"flag":900, "tid":"AC61D447924A", "uid":"MOBILI"}
+	]
+}

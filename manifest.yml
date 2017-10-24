@@ -1,0 +1,12 @@
+applications:
+- host: app0
+  disk: 256M
+  name: app0
+  path: ./WebContent
+  domain: baudelaine.eu-de.mybluemix.net
+  mem: 256M
+  instances: 1
+  services:
+  - dsc0
+  - ta0
+  - nlu0
