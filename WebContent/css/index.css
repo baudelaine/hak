@@ -1,5 +1,50 @@
 @CHARSET "UTF-8";
 
+.gibtn {
+  padding: 1px 1px 1px 1px;
+}
+
+.testok:before {
+  color: green;
+}
+
+.testko:before {
+  color: red;
+}
+
+.bootstrap-select .btn-default{
+    /*font-size: 16px;*/
+    /*height: 35px;*/
+}
+
+.myButton {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 8px 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 15px;
+}
+
+.rcorners1 {
+    border-radius: 25px;
+    background: #73AD21;
+    padding: 20px;
+    width: 200px;
+    height: 150px;
+}
+
+.glyphicons {
+    font-size: 18px;
+}
+
+/*.btn {
+    height: 30px;
+    width: 30px;
+}*/
+
 .flyover {
    left: 150%;
    overflow: hidden;

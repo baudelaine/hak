@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="css/bootstrap-table.css">
     <link rel="stylesheet" href="css/bootstrap-editable.css">
     <link rel="stylesheet" href="css/bootstrap-select.min.css">
+    <link rel="stylesheet" href="css/glyphicons.css">
     <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
@@ -37,7 +38,12 @@
       <div id="Alert"></div>
       <div class="toolbar form-inline">
           <select class="selectpicker" id="SelectLogger" data-show-subtext="true" data-live-search="true" title="Select a logger..."></select>
-          <button type="button" onclick="GetLoggerDatas()" class="btn btn-default dropdown-toggle" data-toggle="tooltip" data-placement="top" title="Get datas from logger."><span class="glyphicon glyphicon-magnet" aria-hidden="true"></span></button>
+          <button type="button" id="GetLoggerDatas" onclick="GetLoggerDatas()" class="btn btn-default gibtn" data-toggle="tooltip" data-placement="top" title="Get datas from logger."><span class="glyphicons glyphicons-magnet"></span></button>
+          <button type="button" id="SaveToDB" onclick="SaveToDB()" class="btn btn-default gibtn" data-toggle="tooltip" data-placement="top" title="Save datas to database."><span class="glyphicons glyphicons-floppy-save"></span></button>
+
+          <button type="button" id="TestServerConnection" onclick="TestServerConnection()" class="btn btn-default gibtn" data-toggle="tooltip" data-placement="top" title="Test connection to UDP server."><span class="glyphicons glyphicons-server"></span></button>
+          <button type="button" id="TestDBConnection" onclick="TestDBConnection()" class="btn btn-default gibtn" data-toggle="tooltip" data-placement="top" title="Test connection to database."><span class="glyphicons glyphicons-database"></span></button>
+          <button type="button" id="Reset" onclick="Reset()" class="btn btn-danger gibtn" data-toggle="tooltip" data-placement="top" title="Test connection to database."><span class="glyphicons glyphicons-restart"></span></button>
       </div>
       <table id="LoggerDatas"
         data-toolbar="toolbar">

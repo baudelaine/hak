@@ -165,6 +165,11 @@ public class CCadaLoggerServlet extends HttpServlet {
 						}
 						break;
 						
+					case "reset":
+						request.getSession().invalidate();
+						datas.put("RESPONSE", "OK");
+						break;
+						
 					default:
 						datas.put("USAGE", props.get("USAGE"));
 						break;

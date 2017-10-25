@@ -176,6 +176,80 @@ function GetLoggerDatas(){
 
 }
 
+function TestServerConnection(){
+
+  $.ajax({
+    type: 'POST',
+    url: "CCadaLogger",
+    dataType: 'json',
+    data: '{"action": "tstsrvconn"}',
+
+    success: function(data) {
+      console.log(data);
+      if(data.RESPONSE == "OK"){
+        ShowAlert("TestServerDBConnection()", "Connection to server was successfull.", "alert-success");
+        $("span.glyphicons-server").addClass('testok');
+      }
+    },
+    error: function(data) {
+      console.log(data);
+      ShowAlert("TestDBConnection()", "Connection to server failed.", "alert-danger");
+      $("span.glyphicons-server").addClass('testko');
+    }
+
+  });
+
+}
+
+
+function TestDBConnection(){
+
+  $.ajax({
+    type: 'POST',
+    url: "CCadaLogger",
+    dataType: 'json',
+    data: '{"action": "tstdbconn"}',
+
+    success: function(data) {
+      console.log(data);
+      if(data.RESPONSE == "OK"){
+        ShowAlert("TestDBConnection()", "Connection to database was successfull.", "alert-success");
+        $("span.glyphicons-database").addClass('testok');
+      }
+    },
+    error: function(data) {
+      console.log(data);
+      ShowAlert("TestDBConnection()", "Connection to database failed.", "alert-danger");
+      $("span.glyphicons-database").addClass('testko');
+    }
+
+  });
+
+}
+
+function Reset(){
+
+  $.ajax({
+    type: 'POST',
+    url: "CCadaLogger",
+    dataType: 'json',
+    data: '{"action": "reset"}',
+
+    success: function(data) {
+      console.log(data);
+      // ShowAlert("Reset()", "Connection to database was successfull.", "alert-success");
+    },
+    error: function(data) {
+      console.log(data);
+      ShowAlert("Reset()", "Reset failed.", "alert-danger");
+    }
+
+  });
+
+  location.reload(true);
+
+}
+
 function ShowAlert(title, message, alerttype, area) {
 
     $('#alertmsg').remove();
