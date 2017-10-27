@@ -229,11 +229,15 @@ function GetLoggerDatas(){
 			}
 
 			$table.bootstrapTable('append', data.RESPONSE);
+      $("span.glyphicons-server").removeClass('testko');
+      $("span.glyphicons-server").addClass('testok');
     },
     error: function(request, status, error) {
       console.log(request);
       console.log(status);
       console.log(error);
+      $("span.glyphicons-server").removeClass('testok');
+      $("span.glyphicons-server").addClass('testko');
     }
 
   });
