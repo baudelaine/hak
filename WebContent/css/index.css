@@ -4,11 +4,11 @@
   padding: 1px 1px 1px 1px;
 }
 
-.testok:before {
+.testok {
   color: green;
 }
 
-.testko:before {
+.testko {
   color: red;
 }
 
@@ -67,7 +67,7 @@
 }
 
 .flyover-top {
-   top: 10px;
+   top: 130px;
 }
 
 .flyover.in {
@@ -79,7 +79,7 @@
 }
 
 .navbar-brand img {
-    height: 50px;
+    height: 60px;
 }
 
 #Loading {
@@ -89,8 +89,9 @@
   display : block;
   position : fixed;
   z-index: 100;
-  background-image : url("spinner.gif");
-  background-color:#FFFFFF;
+  /*background-image : url("spinner.gif");*/
+  background-image : url(../img/spinner0.gif);
+  background-color:black;
   opacity : 0.4;
   background-repeat : no-repeat;
   background-position : center;

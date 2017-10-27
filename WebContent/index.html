@@ -8,53 +8,197 @@
     <link rel="stylesheet" href="css/bootstrap-editable.css">
     <link rel="stylesheet" href="css/bootstrap-select.min.css">
     <link rel="stylesheet" href="css/glyphicons.css">
+    <link rel="stylesheet" href="css/bootstrap-tagsinput.css">
     <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
     <div class="container-fluid" style="margin-top: 10px;">
       <nav class="navbar navbar-default">
         <div class="container-fluid">
-          <div class="navbar-header">
-            <a class="navbar-brand" href="#">
-              <img alt="Brand" src="img/hak.jpg"><br>
-              <strong>C-Cada Logger</strong>
+          <!-- <div class="navbar-header"> -->
+            <a class="navbar-brand" href="http://www.hearandknow.eu">
+              <img alt="Hear & Know" src="img/hak0.jpg">
             </a>
-          </div>
+          <!-- </div> -->
 
-          <form class="navbar-form navbar-brand navbar-left">
-
+          <form class="navbar-form navbar-left">
+            <a class="" href="http://www.hearandknow.eu">
+              <img alt="IBM Scale Zone" src="img/hak1.jpg" height = "80" width="800">
+            </a>
           </form>
 
           <form class="navbar-form navbar-brand navbar-right">
-            <img src="img/scalezone.png">
-            <img src="img/ibm.bluemix.jpg"><br>
-            <small><a href="https://www-304.ibm.com/partnerworld/wps/servlet/ContentHandler/isv_inv_tsp_iic_paris_overview">Delivered by BPSH Paris </a></small>
 
+            <a class="navbar-brand" href="https://www.ibm.com/cloud-computing/">
+              <img alt="IBM Scale Zone" src="img/ic0.png">
+            </a>
+            <a class="navbar-brand" href="http://www.ibm.com/connect/ibm/access/msphub/fr/fr/scale_zone.html">
+              <img alt="IBM Scale Zone" src="img/sz0.png">
+            </a>
+            <a class="navbar-brand" href="https://www-304.ibm.com/partnerworld/wps/servlet/ContentHandler/isv_inv_tsp_iic_paris_overview">
+              <img alt="PARIS IBM BPSH" src="img/ibp0.png">
+            </a>
           </form>
 
         </div>
       </nav>
+
       <div id="Loading"></div>
       <div id="Alert"></div>
-      <div class="toolbar form-inline">
+
+      <div>
+
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist" id="NavTab">
+          <li role="presentation" class="active"><a href="#CCadaLogger" aria-controls="mails" role="tab" data-toggle="tab">C-Cada Logger</a></li>
+          <li role="presentation"><a href="#AboutUs" aria-controls="ta" role="tab" data-toggle="tab">About us</a></li>
+
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+          <div role="tabpanel" class="tab-pane fade in active" id="CCadaLogger">
+          </div>
+          <div role="tabpanel" class="tab-pane fade" id="AboutUs">
+          </div>
+        </div>
+
+      </div>
+
+      <p></p>
+
+      <div class="toolbar form-inline" id="Toolbar">
           <select class="selectpicker" id="SelectLogger" data-show-subtext="true" data-live-search="true" title="Select a logger..."></select>
           <button type="button" id="GetLoggerDatas" onclick="GetLoggerDatas()" class="btn btn-default gibtn" data-toggle="tooltip" data-placement="top" title="Get datas from logger."><span class="glyphicons glyphicons-magnet"></span></button>
-          <button type="button" id="SaveToDB" onclick="SaveToDB()" class="btn btn-default gibtn" data-toggle="tooltip" data-placement="top" title="Save datas to database."><span class="glyphicons glyphicons-floppy-save"></span></button>
+          <button type="button" id="GetBackupName" onclick="GetBackupName()" class="btn btn-default gibtn" data-toggle="tooltip" data-placement="top" title="Save datas."><span class="glyphicons glyphicons-file-cloud-upload"></span></button>
+          <button type="button" id="RestoreFromDB" onclick="RestoreFromDB()" class="btn btn-default gibtn" data-toggle="tooltip" data-placement="top" title="Get saved datas."><span class="glyphicons glyphicons-file-cloud-download"></span></button>
 
           <button type="button" id="TestServerConnection" onclick="TestServerConnection()" class="btn btn-default gibtn" data-toggle="tooltip" data-placement="top" title="Test connection to UDP server."><span class="glyphicons glyphicons-server"></span></button>
           <button type="button" id="TestDBConnection" onclick="TestDBConnection()" class="btn btn-default gibtn" data-toggle="tooltip" data-placement="top" title="Test connection to database."><span class="glyphicons glyphicons-database"></span></button>
-          <button type="button" id="Reset" onclick="Reset()" class="btn btn-danger gibtn" data-toggle="tooltip" data-placement="top" title="Test connection to database."><span class="glyphicons glyphicons-restart"></span></button>
+          <button type="button" id="RemoveAll" onclick="RemoveAll()" class="btn btn-default gibtn" data-toggle="tooltip" data-placement="top" title="Remove all datas."><span class="glyphicons glyphicons-bin"></span></button>
+          <button type="button" id="Reset" onclick="Reset()" class="btn btn-danger gibtn" data-toggle="tooltip" data-placement="top" title="Reset session."><span class="glyphicons glyphicons-restart"></span></button>
       </div>
       <table id="LoggerDatas"
         data-toolbar="toolbar">
       </table>
+
+      <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+
+        <div class="panel"><p>The best indoor and outdoor geolocation anywhere</p>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-heading" role="tab" id="headingOne">
+            <h4 class="panel-title">
+              <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                NOTRE OFFRE PRODUIT ET/OU SERVICE
+              </a>
+            </h4>
+          </div>
+          <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+            <div class="panel-body">
+              <p>We provide software and hardware solutions to localize people and valuable assets. <br />
+                Because this is the only technology that permits locating of people/assets outdoors as well as indoors, <br />
+                in any country all without having to deploy any infrastructure, our innovative technology has been awarded of the silver medal at CES Las Vegas 2016. </p>
+              <a rel="lightbox" href="http://www.hearandknow.eu">
+                  <img src="img/hak0.jpg" height="150" width="300"/>
+              </a>
+          </div>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-heading" role="tab" id="headingTwo">
+            <h4 class="panel-title">
+              <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                NOS AVANTAGES CONCURRENTIELS
+              </a>
+            </h4>
+          </div>
+          <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+            <div class="panel-body">
+              <p>Our solution works<br />
+              -	In any country<br />
+              -	Indoor/outdoor<br />
+              With<br />
+              -	Same kind of accuracy as GPS (3 to 10 meters)<br />
+              -	Coverage complementing the GPS<br />
+              Without<br />
+              -	Having to deploy radio infrastructure<br />
+              -	Needing to patrol the area to make fingerprints/ heat-map to learn the terrain<br />
+              -	Cellular subscription</p>
+          </div>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-heading" role="tab" id="headingThree">
+            <h4 class="panel-title">
+              <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                NOTRE BUSINESS MODEL
+              </a>
+            </h4>
+          </div>
+          <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+            <div class="panel-body">
+              <p>Our business is :<br />
+              •	Profitable: since 2015<br />
+              •	We have Bootstrapped<br />
+              •	Scalable: our infrastructure / back office (server, database) being installed, each new customer costs less than the previous<br />
+              •	Replicable: from France to the world, ambition is like our technology : not limited to France and not to B2G market </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    <!-- Container -->
     </div>
+
+
+    <!-- BackupList modal -->
+    <div class="modal fade" id="BackupList" tabindex="-1" role="dialog" aria-labelledby="BackupListLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="BackupListLabel">Available backup(s) on server.</h4>
+          </div>
+          <div class="modal-body">
+
+          </div>
+          <div class="modal-footer">
+            <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button> -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- BackupList modal -->
+
+    <!-- BackupName modal -->
+    <div class="modal fade" id="BackupName" tabindex="-1" role="dialog" aria-labelledby="BackupNameLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="BackupNameLabel">Enter a backup number.</h4>
+          </div>
+          <div class="modal-body">
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" onclick="SaveToDB()"><span class="glyphicon glyphicon-ok aria-hidden="true"></button>
+            <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove aria-hidden="true"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- BackupName modal -->
+
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/bootstrap-table.js"></script>
     <script src="js/bootstrap-table-editable.js"></script>
     <script src="js/bootstrap-editable.js"></script>
     <script src="js/bootstrap-select.min.js"></script>
+    <script src="js/bootstrap-list-filter.min.js"></script>
+    <script src="js/bootstrap-tagsinput.js"></script>
+    <script src="js/bootbox.min.js"></script>
+
     <script src="js/index.js"></script>
 </body>
 </html>

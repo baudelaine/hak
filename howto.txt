@@ -22,4 +22,11 @@ curl -H "Content-Type: application/json" -X POST -d '{"action": "getpositions", 
 
 curl -X POST -F 'parms={"action": "savetoDb"}' -F 'backup=@bak0.json'  http://localhost/app0/CCadaLogger
 
+#Get all docs _id from Cloudant
+
+curl -H "Content-Type: application/json" -X POST -d '{"action": "getDbdocs"}'  http://localhost/app0/CCadaLogger
+
+#Get doc with the specified _id from Cloudant
+
+curl -H "Content-Type: application/json" -X POST -d '{"action": "getDbdoc", "_id": "w6L_ziSBd-uOBod5_DTpbEI-2017-10-26-18-14-33"}'  http://localhost/app0/CCadaLogger
 

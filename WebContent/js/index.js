@@ -1,6 +1,13 @@
+var backups = [];
+var $mainTab = $("a[href='#CCadaLogger']");
+var $aboutTab = $("a[href='#AboutUs']");
+var activeTab = "C-Cada Logger";
+var previousTab;
+
 $(document)
 .ready(function() {
-  SelectLogger();
+  $(".panel").hide();
+  GetLoggers();
   BuildTable();
 })
 .ajaxStart(function(){
@@ -8,6 +15,46 @@ $(document)
 })
 .ajaxStop(function(){
     $("div#Loading").removeClass('show');
+});
+
+$('#BackupList').on('shown.bs.modal', function() {
+    $(this).find('.modal-body').empty();
+    var list = '<div class="container-fluid"><div class="row"><form role="form"><div class="form-group">';
+    list += '<input id="searchinput" class="form-control" type="search" placeholder="Search..." /></div>';
+    list += '<div id="searchlist" class="list-group">';
+
+    $.each(backups, function(index, _id){
+      list += '<a href="#" class="list-group-item" onClick="OpenBackup(' + index + '); return false;"><span>' + _id + '</span></a>';
+    });
+    list += '</div></form><script>$("#searchlist").btsListFilter("#searchinput", {itemChild: "span", initial: false, casesensitive: false,});</script>';
+    $(this).find('.modal-body').append(list);
+
+});
+
+$('#BackupName').on('shown.bs.modal', function() {
+    $(this).find('.modal-body').empty();
+    var html = [
+      '<div class="container-fluid"><div class="row"><div class="form-group"><div class="input-group">',
+	    '<span class="input-group-addon">backup-</span>',
+      '<input type="text" id="BackupNumber" class="form-control">',
+      '</div></div></div></div>',
+    ].join('');
+
+    $(this).find('.modal-body').append(html);
+    $(this).find('#BackupNumber').focus().val("NNN");
+
+});
+
+$mainTab.on('shown.bs.tab', function(e) {
+  $(".panel").hide();
+  $("#Toolbar").show();
+  $("#LoggerDatas").show();
+});
+
+$aboutTab.on('shown.bs.tab', function(e) {
+  $(".panel").show();
+  $("#Toolbar").hide();
+  $("#LoggerDatas").hide();
 });
 
 function SelectLogger(){
@@ -43,7 +90,7 @@ function BuildTable() {
 
   var cols = [];
   // cols.push({field:"checkbox", checkbox: "true"});
-  cols.push({field:"index", title: "Index", align:"center", formatter: "IndexFormatter", sortable: false});
+  // cols.push({field:"index", title: "Index", align:"center", formatter: "IndexFormatter", sortable: false});
   cols.push({field:"uid", title: "UID", align:"center", sortable: true});
   cols.push({field:"tid", title: "TID", align:"center", sortable: true});
   cols.push({field:"flag", title: "Flag", align:"center", sortable: true});
@@ -65,12 +112,7 @@ function BuildTable() {
 
       },
       onExpandRow: function (index, row, $detail) {
-        var response;
-        $.getJSON( "res/response.json", function(data){
-          response = data;
-          console.log(response.positions);
-          ExpandTable($detail, response.positions, row);
-        });
+        ExpandTable($detail, row.positions, row);
       }
   });
 }
@@ -162,17 +204,249 @@ function GetLoggerDatas(){
 
   var selectedLogger = $selectLogger.find("option:selected").val();
 
+  if (selectedLogger == 'Choose a table...' || selectedLogger == '') {
+		ShowAlert("GetLoggerDatas()", "No logger selected.", "alert-warning");
+		return;
+	}
+
   var logger = {tid: "", uid: "", flag: 0};
   logger.tid = selectedLogger.split(' - ')[0];
   logger.uid = selectedLogger.split(' - ')[1];
   logger.flag = selectedLogger.split(' - ')[2];
 
-  $table = $('#LoggerDatas');
+  var $table = $('#LoggerDatas');
 
-  $table.bootstrapTable("filterBy", {});
-	nextIndex = $table.bootstrapTable("getData").length;
-	console.log("nextIndex=" + nextIndex);
-	$table.bootstrapTable('insertRow', {index: nextIndex, row: logger});
+  $.ajax({
+    type: 'POST',
+    url: "CCadaLogger",
+    dataType: 'json',
+    data: '{"action": "getpositions", "logger": {"flag": ' + logger.flag + ', "uid":"' + logger.uid + '", "tid": "' + logger.tid + '" }}',
+
+    success: function(data) {
+      console.log(data);
+			if (data.RESPONSE.positions.length == 0) {
+				showAlert("GetLoggerDatas()", "No data returned from logger.", "alert-info");
+			}
+
+			$table.bootstrapTable('append', data.RESPONSE);
+    },
+    error: function(request, status, error) {
+      console.log(request);
+      console.log(status);
+      console.log(error);
+    }
+
+  });
+}
+
+function OpenBackup(index){
+
+  $('#BackupList').modal('toggle');
+  var $table = $('#LoggerDatas');
+
+  var _id = backups[index];
+
+  $.ajax({
+    type: 'POST',
+    url: "CCadaLogger",
+    dataType: 'json',
+    data: '{"action": "GetDBDoc", "_id": "' + _id + '"}',
+
+    success: function(data) {
+      console.log(data);
+      if(data.RESPONSE.STATUS == "OK"){
+        $table.bootstrapTable('load', data.RESPONSE.RESULT.loggers);
+        ShowAlert("OpenBackup()", data.RESPONSE.MESSAGE, "alert-success");
+        $("span.glyphicons-database").removeClass('testko');
+        $("span.glyphicons-database").addClass('testok');
+
+      }
+      else{
+        var errMsg = 'MESSAGE: ' + data.RESPONSE.MESSAGE + '<br>ERROR: ' + data.RESPONSE.ERROR + '<br>REASON: ' +
+          data.RESPONSE.REASON + '<br>TROUBLESHOOTING: ' + data.RESPONSE.TROUBLESHOOTING;
+        ShowAlert("OpenBackup()", errMsg, "alert-danger");
+        $("span.glyphicons-database").removeClass('testok');
+        $("span.glyphicons-database").addClass('testko');
+
+      }
+    },
+    error: function(request, status, error) {
+      console.log(request);
+      console.log(status);
+      console.log(error);
+    }
+
+  });
+
+}
+
+function RestoreFromDB(){
+
+  $.ajax({
+    type: 'POST',
+    url: "CCadaLogger",
+    dataType: 'json',
+    data: '{"action": "GetDBDocs"}',
+
+    success: function(data) {
+      console.log(data);
+      if(data.RESPONSE.STATUS == "OK"){
+        backups = data.RESPONSE.RESULT;
+        if(backups.length > 0){
+          // var resp = confirm("Current datas will be erased. Continue ?");
+          var $table = $('#LoggerDatas');
+          console.log("$table.bootstrapTable('getData')");
+          console.log($table.bootstrapTable('getData').length);
+          if($table.bootstrapTable('getData').length > 0){
+            bootbox.confirm({
+              message: "Current datas will be erased. Continue ?",
+              buttons: {
+                confirm: {
+                    label: '<span class="glyphicon glyphicon-ok aria-hidden="true">',
+                    className: 'btn btn-primary'
+                },
+                cancel: {
+                    label: '<span class="glyphicon glyphicon-remove aria-hidden="true">',
+                    className: 'btn btn-default'
+                }
+              },
+              callback: function(result){
+                if(result){
+                  $('#BackupList').modal('toggle');
+                }
+              }
+            });
+          }
+          else{
+            $('#BackupList').modal('toggle');
+          }
+
+          $("span.glyphicons-database").removeClass('testko');
+          $("span.glyphicons-database").addClass('testok');
+
+        }
+        else{
+          ShowAlert("RestoreFromDB()", "No backup available yet..", "alert-info")
+        }
+      }
+      else{
+        var errMsg = 'MESSAGE: ' + data.RESPONSE.MESSAGE + '<br>ERROR: ' + data.RESPONSE.ERROR + '<br>REASON: ' +
+          data.RESPONSE.REASON + '<br>TROUBLESHOOTING: ' + data.RESPONSE.TROUBLESHOOTING;
+        ShowAlert("RestoreFromDB()", errMsg, "alert-danger");
+        $("span.glyphicons-database").removeClass('testok');
+        $("span.glyphicons-database").addClass('testko');
+      }
+    },
+    error: function(request, status, error) {
+      console.log(request);
+      console.log(status);
+      console.log(error);
+    }
+
+  });
+}
+
+function GetBackupName(){
+
+  var $table = $('#LoggerDatas');
+  var data = JSON.stringify($table.bootstrapTable('getData'));
+  if(!data || 0 === data.length || data == '[]'){
+    ShowAlert("SaveToDB()", "Nothing to save.", "alert-warning");
+		return;
+  }
+
+  $("#BackupName").modal('toggle');
+
+}
+
+function SaveToDB(){
+
+  var backupNumber = $("#BackupName").find('#BackupNumber').val();
+  if (!$.isNumeric(backupNumber)) {
+      ShowAlert("SaveToDB()", "Enter a numeric value.", "alert-warning");
+      return;
+  }
+
+  var $table = $('#LoggerDatas');
+  var data = JSON.stringify($table.bootstrapTable('getData'));
+  var fd = new FormData();
+  var file = new Blob([data], {type: 'plain/text'});
+
+  fd.append('backup', file);
+  fd.append('parms', '{"action": "savetoDb", "backupName": "backup-' + backupNumber + '"}')
+
+  $.ajax({
+    url: "CCadaLogger",
+    type: "POST",
+    data: fd,
+    enctype: 'multipart/form-data',
+    dataType: 'json',
+    processData: false,  // tell jQuery not to process the data
+    contentType: false,   // tell jQuery not to set contentType
+
+    success: function(data) {
+      console.log(data);
+      if(data.RESPONSE.STATUS == "OK"){
+			  ShowAlert("SaveToDB()", data.RESPONSE.MESSAGE, "alert-success");
+        $("span.glyphicons-database").removeClass('testko');
+        $("span.glyphicons-database").addClass('testok');
+
+      }
+      else{
+        var errMsg = 'MESSAGE: ' + data.RESPONSE.MESSAGE + '<br>ERROR: ' + data.RESPONSE.ERROR + '<br>REASON: ' +
+          data.RESPONSE.REASON + '<br>TROUBLESHOOTING: ' + data.RESPONSE.TROUBLESHOOTING;
+        ShowAlert("SaveToDB()", errMsg, "alert-danger");
+        $("span.glyphicons-database").removeClass('testok');
+        $("span.glyphicons-database").addClass('testko');
+
+      }
+		},
+    error: function(request, status, error) {
+      console.log(request);
+      console.log(status);
+      console.log(error);
+    }
+  });
+
+  $("#BackupName").modal('toggle');
+
+}
+
+function RemoveAll(){
+  $('#LoggerDatas').bootstrapTable("removeAll");
+}
+
+
+function GetLoggers(){
+
+  $.ajax({
+    type: 'POST',
+    url: "CCadaLogger",
+    dataType: 'json',
+    data: '{"action": "GetLoggers"}',
+
+    success: function(data) {
+      $selectLogger = $('#SelectLogger');
+
+      $selectLogger.empty();
+
+      $.each(data.RESPONSE, function(index, logger){
+        var value = logger.tid + ' - ' + logger.uid + ' - ' + logger.flag;
+        console.log(value);
+
+        var option = '<option value="' + value + '" data-subtext="' + logger.tid + ' - ' + logger.flag + '">' + logger.uid + '</option>';
+        $selectLogger.append(option);
+      });
+
+      $selectLogger.selectpicker('refresh');
+    },
+    error: function(request, status, error) {
+      console.log(request);
+      console.log(status);
+      console.log(error);
+    }
+
+  });
 
 }
 
@@ -187,14 +461,22 @@ function TestServerConnection(){
     success: function(data) {
       console.log(data);
       if(data.RESPONSE == "OK"){
-        ShowAlert("TestServerDBConnection()", "Connection to server was successfull.", "alert-success");
+        ShowAlert("TestServerConnection()", "Connection to UDP server was successfull.", "alert-success");
+        $("span.glyphicons-server").removeClass('testko');
         $("span.glyphicons-server").addClass('testok');
       }
+      else{
+        ShowAlert("TestServerConnection()", "Connection to UDP server failed.", "alert-danger");
+        $("span.glyphicons-server").removeClass('testok');
+        $("span.glyphicons-server").addClass('testko');
+      }
     },
-    error: function(data) {
-      console.log(data);
-      ShowAlert("TestDBConnection()", "Connection to server failed.", "alert-danger");
+    error: function(request, status, error) {
+      $("span.glyphicons-server").removeClass('testok');
       $("span.glyphicons-server").addClass('testko');
+      console.log(request);
+      console.log(status);
+      console.log(error);
     }
 
   });
@@ -214,13 +496,21 @@ function TestDBConnection(){
       console.log(data);
       if(data.RESPONSE == "OK"){
         ShowAlert("TestDBConnection()", "Connection to database was successfull.", "alert-success");
+        $("span.glyphicons-database").removeClass('testko');
         $("span.glyphicons-database").addClass('testok');
       }
+      else{
+        ShowAlert("TestDBConnection()", "Connection to database failed.", "alert-danger");
+        $("span.glyphicons-database").removeClass('testok');
+        $("span.glyphicons-database").addClass('testko');
+      }
     },
-    error: function(data) {
-      console.log(data);
-      ShowAlert("TestDBConnection()", "Connection to database failed.", "alert-danger");
+    error: function(request, status, error) {
+      $("span.glyphicons-database").removeClass('testok');
       $("span.glyphicons-database").addClass('testko');
+      console.log(request);
+      console.log(status);
+      console.log(error);
     }
 
   });
@@ -239,9 +529,10 @@ function Reset(){
       console.log(data);
       // ShowAlert("Reset()", "Connection to database was successfull.", "alert-success");
     },
-    error: function(data) {
-      console.log(data);
-      ShowAlert("Reset()", "Reset failed.", "alert-danger");
+    error: function(request, status, error) {
+      console.log(request);
+      console.log(status);
+      console.log(error);
     }
 
   });
@@ -250,15 +541,28 @@ function Reset(){
 
 }
 
-function ShowAlert(title, message, alerttype, area) {
+function ShowAlert(title, message, alertType, area) {
 
     $('#alertmsg').remove();
+
+    var timeout = 5000;
 
     if(area == undefined){
       area = "bottom";
     }
+    if(alertType.match('warning')){
+      area = "bottom";
+      timeout = 10000;
+    }
+    if(alertType.match('danger')){
+      area = "bottom";
+      timeout = 30000;
+    }
 
-    var $newDiv = $('<div/>')
+    var $newDiv;
+
+    if(alertType.match('alert-success|alert-info')){
+      $newDiv = $('<div/>')
        .attr( 'id', 'alertmsg' )
        .html(
           '<h4>' + title + '</h4>' +
@@ -266,7 +570,20 @@ function ShowAlert(title, message, alerttype, area) {
           message +
           '</p>'
         )
-       .addClass('alert ' + alerttype + ' flyover flyover-' + area);
+       .addClass('alert ' + alertType + ' flyover flyover-' + area);
+    }
+    else{
+      $newDiv = $('<div/>')
+       .attr( 'id', 'alertmsg' )
+       .html(
+          '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+          '<h4>' + title + '</h4>' +
+          '<p>' +
+          '<strong>' + message + '</strong>' +
+          '</p>'
+        )
+       .addClass('alert ' + alertType + ' alert-dismissible flyover flyover-' + area);
+    }
 
     $('#Alert').append($newDiv);
 
@@ -275,6 +592,6 @@ function ShowAlert(title, message, alerttype, area) {
 
       setTimeout(function() {
          $('#alertmsg').removeClass('in');
-      }, 3200);
+      }, timeout);
     }
 }

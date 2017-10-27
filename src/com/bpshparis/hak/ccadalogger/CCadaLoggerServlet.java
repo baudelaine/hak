@@ -32,7 +32,9 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import com.cloudant.client.api.CloudantClient;
 import com.cloudant.client.api.Database;
 import com.cloudant.client.api.views.AllDocsRequest;
+import com.cloudant.client.api.views.AllDocsResponse;
 import com.cloudant.client.org.lightcouch.DocumentConflictException;
+import com.cloudant.client.org.lightcouch.NoDocumentException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -149,7 +151,20 @@ public class CCadaLoggerServlet extends HttpServlet {
 					case "savetodb":
 						if(backupDatas != null){
 					        String sessionId = request.getSession().getId();
-					        datas.putAll(saveToDb(backupDatas, sessionId));
+					        String backupName = (String) reqParms.get("backupName");
+					        datas.putAll(saveToDb(backupDatas, sessionId, backupName));
+						}
+						break;
+						
+					case "getdbdocs":
+						datas.putAll(getDbDocs());
+						break;
+						
+					case "getdbdoc":
+						if(reqParms.containsKey("_id")){
+							String _id = (String) reqParms.get("_id");
+							datas.putAll(getDbDoc(_id));
+							break;
 						}
 						break;
 						
@@ -184,16 +199,7 @@ public class CCadaLoggerServlet extends HttpServlet {
 
 		catch(JsonMappingException e){
 			
-//			String usage =  (String) props.get("USAGE");
-			
-//			InputStream is = new ByteArrayInputStream(usage.getBytes(StandardCharsets.UTF_8.name()));
 			datas.put("USAGE", props.get("USAGE"));
-			
-//			datas.put("TEST_DB_CONN", Tools.toJSON(new ByteArrayInputStream(((String) props.get("TEST_DB_CONN")).getBytes(StandardCharsets.UTF_8.name()))));
-//			datas.put("ANALYZE_USAGE", props.get("ANALYZE_USAGE"));
-//			datas.put("WARNING_USAGE", props.get("WARNING_USAGE"));
-//			datas.put("UPLOAD_EXAMPLE", props.get("UPLOAD_EXAMPLE"));
-//			datas.put("ANALYZE_EXAMPLE", props.get("ANALYZE_EXAMPLE"));
 			e.printStackTrace();
 
 		}
@@ -223,7 +229,56 @@ public class CCadaLoggerServlet extends HttpServlet {
 		doGet(request, response);
 	}
 	
-	protected Map<String, Object> saveToDb(List<Logger> backupDatas, String sessionId){
+	protected Map<String, Object> getDbDocs() throws IOException{
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			Map<String, Object> content = new HashMap<String, Object>();
+			AllDocsRequest adreq = db.getAllDocsRequestBuilder().build();
+			AllDocsResponse adrsp = adreq.getResponse();
+			List<String> _ids = adrsp.getDocIds();
+			content.put("STATUS", "OK");
+			content.put("MESSAGE", _ids.size() + " document(s) found.");
+			content.put("RESULT", _ids);
+			result.put("RESPONSE", content);
+		}
+		
+		catch(NoDocumentException nde){
+			Map<String, String> error = new HashMap<String, String>();
+			error.put("MESSAGE", "No document found.");
+			error.put("ERROR", "not_found");
+			error.put("REASON", "Database does not exist.");
+			String dbName = (String) props.getProperty("DB_NAME");
+			error.put("TROUBLESHOOTING", "Restart application or recreate " + dbName + " database in Cloudant");
+			result.put("RESPONSE", error);
+		}			
+			
+		return result;
+	}
+
+	protected Map<String, Object> getDbDoc(String _id){
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			Map<String, Object> content = new HashMap<String, Object>();
+			Backup backup = db.find(Backup.class, _id);
+			content.put("STATUS", "OK");
+			content.put("MESSAGE", _id + " retrieved successfully.");
+			content.put("RESULT", backup);
+			result.put("RESPONSE", content);
+		}
+		catch(NoDocumentException nde){
+			Map<String, String> error = new HashMap<String, String>();
+			error.put("MESSAGE", _id + " document not found.");
+			error.put("ERROR", "not_found");
+			String dbName = (String) props.getProperty("DB_NAME");
+			error.put("REASON", _id + " document does exist.");
+			error.put("TROUBLESHOOTING", "Recreate document in " + dbName + " database in Cloudant");
+			result.put("RESPONSE", error);
+		}			
+		
+		return result;
+	}
+	
+	protected Map<String, Object> saveToDb(List<Logger> backupDatas, String sessionId, String backupName){
 		Map<String, Object> result = new HashMap<String, Object>();
 		Calendar c = Calendar.getInstance();
 		c.setTimeInMillis(System.currentTimeMillis());
@@ -233,17 +288,35 @@ public class CCadaLoggerServlet extends HttpServlet {
 		String time = c.get(Calendar.HOUR_OF_DAY) + "-" + c.get(Calendar.MINUTE) + "-" + c.get(Calendar.SECOND);
 		
 		Backup backup = new Backup();
-		backup.set_id(sessionId + "-" + date + "-" + time);
+//		backup.set_id(backupName + "-" + sessionId + "-" + date + "-" + time);
+		backup.set_id(backupName);
 		backup.setLoggers(backupDatas);
 		
 		try{
-			db.save(backup);
-			result.put("RESPONSE", "OK");
+			Map<String, Object> content = new HashMap<String, Object>();
+			com.cloudant.client.api.model.Response dbResp = db.save(backup);
+			content.put("STATUS", "OK");
+			content.put("MESSAGE", backupName +" successfully saved.");
+			content.put("RESULT", dbResp);
+			result.put("RESPONSE", content);
 		}
 		catch (DocumentConflictException dce) {
 			Map<String, String> error = new HashMap<String, String>();
+			error.put("MESSAGE", backupName + " not saved.");
 			error.put("ERROR", "conflict");
 			error.put("REASON", "Document update conflict.");
+			String dbName = (String) props.getProperty("DB_NAME");
+			error.put("TROUBLESHOOTING", "Choose another backup name. " + backupName + 
+					" _id is already registered in " + dbName + " Cloudant database.");
+			result.put("RESPONSE", error);
+		}
+		catch(NoDocumentException nde){
+			Map<String, String> error = new HashMap<String, String>();
+			error.put("MESSAGE", backupName + " not saved.");
+			error.put("ERROR", "not_found");
+			error.put("REASON", "Database does not exist.");
+			String dbName = (String) props.getProperty("DB_NAME");
+			error.put("TROUBLESHOOTING", "Restart application or recreate " + dbName + " database in Cloudant");
 			result.put("RESPONSE", error);
 		}
 		

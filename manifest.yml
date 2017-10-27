@@ -1,12 +1,11 @@
 applications:
-- host: app0
+- host: ccadalogger
   disk: 256M
-  name: app0
+  name: ccadalogger
   path: ./WebContent
-  domain: baudelaine.eu-de.mybluemix.net
+  domain: hak.eu-de.mybluemix.net
   mem: 256M
   instances: 1
   services:
-  - dsc0
-  - ta0
-  - nlu0
+  - db0
+  - hak0
