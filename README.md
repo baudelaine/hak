@@ -155,7 +155,7 @@ Then deploy C-Cada Logger to Bluemix:
 
 **!!! WARNING !!!**
 
-Push application **from hak-master directory ONLY or command will fail**
+Push application **from hak-master directory ONLY or command will fail**:
 ```
 cf p
 ```
