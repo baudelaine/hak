@@ -96,7 +96,7 @@ First list orgs to get yours:
 cf orgs
 ```
 Then create the subdomain:
-> Syntax: cf create-domain <org> <subdomain>
+> Syntax: cf create-domain \<org\> \<subdomain\>
 ```
 cf create-domain <org> hearandknow.mybluemix.net
 ```
