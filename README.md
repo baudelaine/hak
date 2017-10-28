@@ -11,8 +11,8 @@ cf -v
 
 **!!! WARNING !!!**
 
-*Every further variable - including ${} or <> - like ${something} or \<something\> 
-as to be substitute with your own environment variable:*
+*Every further variables - including ${} or <> - like ${something} or \<something\> 
+have to be substituted with your own environment variables:*
 
 * e.g.
   * ${userid} will become yourUserid
