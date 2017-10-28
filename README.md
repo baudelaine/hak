@@ -42,7 +42,7 @@ cf l -a https://api.eu-gb.bluemix.net -u ${userid} -p ${password} --skip-ssl-val
 ```
 
 Create cloudantNoSQLDB service:
-> Syntax: cf cs <service> <plan> <service_instance>
+> Syntax: cf cs \<service\> \<plan\> <service_instance>
 ```
 cf cs cloudantNoSQLDB Lite db0
 ```
@@ -80,31 +80,31 @@ Before creating a service instance which will be able to query Hear&Know UDP ser
 ```
 
 Then come back to cf cli and create Hear&Know user provided service
-> Syntax: cf cups <service_instance> -p <json file>
+> Syntax: cf cups <service_instance> -p \<json_file\>
 ```
 cf cups hak0 -p serverConf.json
 ```
 
-Check that both services are created
+Check that both services are created:
 ```
 cf s
 ```
 
 If not already done, create a Bluemix subdomain in your organization.
-First list orgs to get yours
+First list orgs to get yours:
 ```
 cf orgs
 ```
-Then create the subdomain
+Then create the subdomain:
 > Syntax: cf create-domain <org> <subdomain>
 ```
 cf create-domain <org> hearandknow.mybluemix.net
 ```
-or if in United Kingdom Region
+or if in United Kingdom Region:
 ```
 cf create-domain <org> hearandknow.eu-gb.mybluemix.net
 ```
-or if in Germany Region
+or if in Germany Region:
 ```
 cf create-domain <org> hearandknow.eu-de.mybluemix.net
 ```
@@ -126,12 +126,12 @@ cd hak-master
 ```
 
 Now edit manifest.yml and check key value pairs:
-1. host has to be set to **C-Cada_Logger**
-2. name has to be set to **C-Cada_Logger**
+1. host has to be set to **C-Cada_Logger**.
+2. name has to be set to **C-Cada_Logger**.
 3. domain value has to be set either to:
-   * **hearandknow.mybluemix.net** if in US South Region
-   * or **hearandknow.eu-gb.mybluemix.net** if in United Kingdom Region 
-   * or **hearandknow.eu-de.mybluemix.net** if in United Germany Region
+   * **hearandknow.mybluemix.net** if in US South Region.
+   * or **hearandknow.eu-gb.mybluemix.net** if in United Kingdom Region.
+   * or **hearandknow.eu-de.mybluemix.net** if in United Germany Region.
 4. services to bind to C-Cada_Logger has to be set to both:
    * **db0**
    * **hak0**
@@ -155,7 +155,7 @@ Then deploy C-Cada Logger to Bluemix:
 
 **!!! WARNING !!!**
 
-Push application from hak-master ONLY or command will fail.
+Push application **from hak-master directory ONLY or command will fail**
 ```
 cf p
 ```
@@ -166,7 +166,7 @@ cf a
 ```
 
 Copy urls columns content. It should match: 
->**C-Cada_Logger.hearandknow.eu-de.mybluemix.net**
+> **C-Cada_Logger.hearandknow.eu-de.mybluemix.net**
 
 Paste it in a Web browser and check C-Cada Logger is running.
 
