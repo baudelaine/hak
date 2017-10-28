@@ -126,8 +126,8 @@ cd hak-master
 ```
 
 Now edit manifest.yml and check key value pairs:
-1. host has to be set to **C-Cada_Logger**.
-2. name has to be set to **C-Cada_Logger**.
+1. host has to be set to **ccadalogger**.
+2. name has to be set to **ccadalogger**.
 3. domain value has to be set either to:
    * **hearandknow.mybluemix.net** if in US South Region.
    * or **hearandknow.eu-gb.mybluemix.net** if in United Kingdom Region.
@@ -139,9 +139,9 @@ Now edit manifest.yml and check key value pairs:
 e.g. for Germany Region:
 ```
 applications:
-- host: C-Cada_Logger
+- host: ccadalogger
   disk: 256M
-  name: C-Cada_Logger
+  name: ccadalogger
   path: ./WebContent
   domain: hearandknow.eu-de.mybluemix.net
   mem: 256M
@@ -166,7 +166,7 @@ cf a
 ```
 
 Copy urls columns content. It should match: 
-> **C-Cada_Logger.hearandknow.eu-de.mybluemix.net**
+> **ccadalogger.hearandknow.eu-de.mybluemix.net**
 
 Paste it in a Web browser and check C-Cada Logger is running.
 
@@ -174,8 +174,8 @@ Paste it in a Web browser and check C-Cada Logger is running.
 
 Unbind service_instance from app:
 ```
-cf us C-Cada_Logger hak0
-cf us C-Cada_Logger db0
+cf us ccadalogger hak0
+cf us ccadalogger db0
 ```
 
 Delete service-key from service_instance:
@@ -191,7 +191,7 @@ cf ds db0 -f
 
 Delete applications:
 ```
-cf d C-Cada_Logger -f
+cf d ccadalogger -f
 ```
 
 Delete owned domain:
