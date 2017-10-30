@@ -11,8 +11,8 @@ cf -v
 
 **!!! WARNING !!!**
 
-*Every further variable - including ${} or <> - like ${something} or \<something\> 
-as to be substitute with your own environment variable:*
+*Every further variables - including ${} or <> - like ${something} or \<something\> 
+have to be substituted with your own environment variables:*
 
 * e.g.
   * ${userid} will become yourUserid
@@ -21,12 +21,13 @@ as to be substitute with your own environment variable:*
 **!!! WARNING !!!**
 
 Before being able to log to Bluemix with cf command you should be aware of **2** things:
-  1. the name of your **organization** - which is usually the same name as your Bluemix userid and the same among all Regions (Germany, Sydney, United Kingdom and US South)
-  2. the name of one **space** - which is assigned to one Region - in one Region (Germany, Sydney, United Kingdom or US South) in your organization.
+  1. the name of your **organization**, which is the same among all Regions (Germany, Sydney, United Kingdom and US South).
+  2. the name of one **space** - which is assigned to one Region only - in one Region (Germany, Sydney, United Kingdom or US South) in your organization.
 
-> At least one organization has been created automatically, but no space are created for you.
-If not sure about a space is available then log in [Bluemix console](https://console.bluemix.net/account/manage-orgs),
-check 'Spaces in Region' is not empty and if so then Add a space.
+> At least one organization has been created automatically, but no space is created for you.
+If not sure about organization name and if a space is available then log in [Bluemix console](https://console.bluemix.net/account/manage-orgs) to get your organization name, check that 'Spaces in Region' is not empty and if so then Add a space.
+
+Now you should know both your organization and your space in one Region and your are ready to connect to Bluemix in command line.
 
 Connect to Bluemix (US):
 ```
@@ -126,8 +127,8 @@ cd hak-master
 ```
 
 Now edit manifest.yml and check key value pairs:
-1. host has to be set to **C-Cada_Logger**.
-2. name has to be set to **C-Cada_Logger**.
+1. host has to be set to **ccadalogger**.
+2. name has to be set to **ccadalogger**.
 3. domain value has to be set either to:
    * **hearandknow.mybluemix.net** if in US South Region.
    * or **hearandknow.eu-gb.mybluemix.net** if in United Kingdom Region.
@@ -139,9 +140,9 @@ Now edit manifest.yml and check key value pairs:
 e.g. for Germany Region:
 ```
 applications:
-- host: C-Cada_Logger
+- host: ccadalogger
   disk: 256M
-  name: C-Cada_Logger
+  name: ccadalogger
   path: ./WebContent
   domain: hearandknow.eu-de.mybluemix.net
   mem: 256M
@@ -155,7 +156,7 @@ Then deploy C-Cada Logger to Bluemix:
 
 **!!! WARNING !!!**
 
-Push application **from hak-master directory ONLY or command will fail**
+Push application **from hak-master directory ONLY or command will fail**:
 ```
 cf p
 ```
@@ -166,7 +167,7 @@ cf a
 ```
 
 Copy urls columns content. It should match: 
-> **C-Cada_Logger.hearandknow.eu-de.mybluemix.net**
+> **ccadalogger.hearandknow.eu-de.mybluemix.net**
 
 Paste it in a Web browser and check C-Cada Logger is running.
 
@@ -174,8 +175,8 @@ Paste it in a Web browser and check C-Cada Logger is running.
 
 Unbind service_instance from app:
 ```
-cf us C-Cada_Logger hak0
-cf us C-Cada_Logger db0
+cf us ccadalogger hak0
+cf us ccadalogger db0
 ```
 
 Delete service-key from service_instance:
@@ -191,7 +192,7 @@ cf ds db0 -f
 
 Delete applications:
 ```
-cf d C-Cada_Logger -f
+cf d ccadalogger -f
 ```
 
 Delete owned domain:
