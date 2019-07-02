@@ -1,5 +1,73 @@
 # How to deploy and execute Hear&Know C-Cada Logger
 
+
+
+Host:
+
+	sudo docker search --filter=stars=10 ubuntu
+	docker pull ubuntu
+	git clone https://github.com/baudelaine/hak
+	cd hak
+	sudo docker create --tty --interactive --name="hak" -v $PWD:/app ubuntu:latest 
+	sudo docker start hak
+	sudo docker attach hak
+
+Container:
+
+```
+apt-get update
+apt-get install -y curl jq moreutils vim unzip
+curl -fsSL https://clis.ng.bluemix.net/install/linux | sh
+ibmcloud config --check-version false
+ibmcloud config --usage-stats-collect false
+exit
+```
+
+Host:
+
+	sudo docker commit hak hak1
+	sudo docker stop hak
+	sudo docker rm hak
+	sudo docker run -p 80:9080 -tdi --name hak -v $PWD:/app -v /home/fr054721/Downloads/murex:/products hak1 
+
+Container:
+
+```
+tar xvzf /products/jdk-8u212-linux-x64.tar.gz -C /opt
+unzip -d /opt /products/wlp-kernel-19.0.0.6.zip
+
+cat >> ~/.bash_aliases << EOF
+alias stwlp='$WLP_HOME/bin/server start $WLP_SRV_NAME'
+alias spwlp='$WLP_HOME/bin/server stop $WLP_SRV_NAME'
+alias rmwlplogs='rm -rf $WLP_HOME/usr/servers/$WLP_SRV_NAME/logs/*'
+alias rstwlp='spwlp && rmwlplogs  && stwlp'
+alias cnfwlp='/usr/bin/vi $WLP_HOME/usr/servers/$WLP_SRV_NAME/server.xml'
+alias monwlp='tail -f $WLP_HOME/usr/servers/$WLP_SRV_NAME/logs/messages.log'
+alias logwlp='/usr/bin/vi $WLP_HOME/usr/servers/$WLP_SRV_NAME/logs/messages.log'
+alias statwlp='$WLP_HOME/bin/server status $WLP_SRV_NAME'
+alias pidwlp="ps -eaf | grep -v grep | grep $WLP_SRV_NAME'$' | awk '{print \$2}'"
+alias kwlp='kill -9 $(pidwlp)'
+alias appwlp='/usr/bin/vi $WLP_HOME/usr/servers/$WLP_SRV_NAME/apps/$WLP_APP_NAME.war.xml'
+alias iclsso='/usr/local/bin/ibmcloud login -u ${IC_ID} --sso --no-region'
+alias icl='/usr/local/bin/ibmcloud login -u ${IC_ID} --skip-ssl-validation --no-region'
+IC_ID="sebastien.gautier@fr.ibm.com"
+JAVA_HOME=/opt/jdk1.8.0_212/jre
+PATH=/opt/jdk1.8.0_212/bin:$PATH
+WLP_HOME='/opt/wlp'
+WLP_SRV_NAME='defaultServer'
+WLP_APP_NAME='app'
+export JAVA_HOME PATH WLP_HOME WLP_SRV_NAME WLP_APP_NAME
+EOF
+
+. ~/.bash_aliases
+```
+
+
+
+ 
+
+
+
 Install the cf CLI from [Cloud Foundry](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html)
 
 Open a Windows command prompt as administrator or a terminal on other platform.
@@ -136,7 +204,7 @@ Now edit manifest.yml and check key value pairs:
 4. services to bind to C-Cada_Logger has to be set to both:
    * **db0**
    * **hak0**
-  
+
 e.g. for Germany Region:
 ```
 applications:
