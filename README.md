@@ -35,8 +35,11 @@ Container:
 ```
 tar xvzf /products/jdk-8u212-linux-x64.tar.gz -C /opt
 unzip -d /opt /products/wlp-kernel-19.0.0.6.zip
+```
 
-cat >> ~/.bash_aliases << EOF
+
+Add this to **~/.bash_aliases**:
+```
 alias stwlp='$WLP_HOME/bin/server start $WLP_SRV_NAME'
 alias spwlp='$WLP_HOME/bin/server stop $WLP_SRV_NAME'
 alias rmwlplogs='rm -rf $WLP_HOME/usr/servers/$WLP_SRV_NAME/logs/*'
@@ -57,14 +60,23 @@ WLP_HOME='/opt/wlp'
 WLP_SRV_NAME='defaultServer'
 WLP_APP_NAME='app'
 export JAVA_HOME PATH WLP_HOME WLP_SRV_NAME WLP_APP_NAME
-EOF
-
-. ~/.bash_aliases
 ```
 
 
 
- 
+	. ~/.bash_aliases
+
+
+Create Cloudant service instance
+
+	ibmcloud resource service-instance-create db cloudantnosqldb lite eu-de -p '{"legacyCredentials": false}'
+
+Create Cloudant service key
+
+	ibmcloud resource service-key-create dbKey Manager --instance-name db
+
+
+
 
 
 
@@ -275,3 +287,6 @@ or
 ```
 cf delete-domain hearandknow.eu-de.mybluemix.net -f
 ```
+
+
+

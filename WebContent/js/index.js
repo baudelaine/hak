@@ -434,6 +434,8 @@ function GetLoggers(){
 
       $selectLogger.empty();
 
+      console.log(data);
+
       $.each(data.RESPONSE, function(index, logger){
         var value = logger.tid + ' - ' + logger.uid + ' - ' + logger.flag;
         console.log(value);
