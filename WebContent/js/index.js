@@ -7,6 +7,7 @@ var previousTab;
 $(document)
 .ready(function() {
   $(".panel").hide();
+  CheckInit();
   GetLoggers();
   BuildTable();
 })
@@ -225,7 +226,7 @@ function GetLoggerDatas(){
     success: function(data) {
       console.log(data);
 			if (data.RESPONSE.positions.length == 0) {
-				showAlert("GetLoggerDatas()", "No data returned from logger.", "alert-info");
+				ShowAlert("GetLoggerDatas()", "No data returned from logger.", "alert-info");
 			}
 
 			$table.bootstrapTable('append', data.RESPONSE);
@@ -436,13 +437,15 @@ function GetLoggers(){
 
       console.log(data);
 
-      $.each(data.RESPONSE, function(index, logger){
-        var value = logger.tid + ' - ' + logger.uid + ' - ' + logger.flag;
-        console.log(value);
+      if(data.RESPONSE){
+        $.each(data.RESPONSE, function(index, logger){
+          var value = logger.tid + ' - ' + logger.uid + ' - ' + logger.flag;
+          console.log(value);
 
-        var option = '<option value="' + value + '" data-subtext="' + logger.tid + ' - ' + logger.flag + '">' + logger.uid + '</option>';
-        $selectLogger.append(option);
-      });
+          var option = '<option value="' + value + '" data-subtext="' + logger.tid + ' - ' + logger.flag + '">' + logger.uid + '</option>';
+          $selectLogger.append(option);
+        });
+      }
 
       $selectLogger.selectpicker('refresh');
     },
@@ -519,6 +522,27 @@ function TestDBConnection(){
       console.log(error);
     }
 
+  });
+
+}
+
+function CheckInit(){
+
+  $.ajax({
+    type: 'POST',
+    url: "CheckInit",
+    dataType: 'json',
+    data: '',
+
+    success: function(data) {
+      console.log(data);
+      if(data.INIT.STATUS == 'KO'){
+        ShowAlert(data.INIT.MSG, data.INIT.RESULT + '<br>' + data.INIT.TROUBLESHOOTING, "alert-danger", "bottom");
+      }
+    },
+    error: function(data) {
+      console.log(data);
+    }
   });
 
 }

@@ -9,8 +9,6 @@ import java.io.StringWriter;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -50,8 +48,7 @@ public class CCadaLoggerServlet extends HttpServlet {
 	Properties props;
 	Database db;
 	CloudantClient dbClient;
-	Map<String, Object> hak = new HashMap<String, Object>();
-
+	Resource hak;
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -68,7 +65,7 @@ public class CCadaLoggerServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 
 		props = (Properties) getServletContext().getAttribute("props");
-		hak = (Map<String, Object>) getServletContext().getAttribute("hak");
+		hak = (Resource) getServletContext().getAttribute("hak");
 		db = (Database) getServletContext().getAttribute("db");
 		dbClient = (CloudantClient) getServletContext().getAttribute("dbClient");
 		
@@ -130,23 +127,27 @@ public class CCadaLoggerServlet extends HttpServlet {
 						break;
 						
 					case "tstsrvconn":
-						Object o = ((List<Object>) hak.get("loggers")).get(0);
-						Position test = null;
-						if(o != null){
-							test = getPositions(Tools.toJSON(o)).get(0);
+						if(hak != null) {
+							Logger logger = hak.getCredentials().get(0).getLoggers().get(0);
+							Position test = null;
+							if(logger != null){
+								test = getPositions(Tools.toJSON(logger)).get(0);
+							}
+							if(test != null){
+								datas.put("RESPONSE", "OK");
+							}
+							else{
+								datas.put("RESPONSE", "KO");
+							}
+							break;
 						}
-						if(test != null){
-							datas.put("RESPONSE", "OK");
-						}
-						else{
-							datas.put("RESPONSE", "KO");
-						}
-						break;
 						
 					case "getloggers":
-						List<Object> loggers = (List<Object>) hak.get("loggers");
-						datas.put("RESPONSE", loggers);
-						break;
+						if(hak != null) {
+							List<Logger> loggers = hak.getCredentials().get(0).getLoggers();
+							datas.put("RESPONSE", loggers);
+							break;
+						}
 						
 					case "savetodb":
 						if(backupDatas != null){
@@ -284,8 +285,8 @@ public class CCadaLoggerServlet extends HttpServlet {
 		c.setTimeInMillis(System.currentTimeMillis());
 		c.add(Calendar.MONTH, 1);
 
-		String date = c.get(Calendar.YEAR) + "-" + c.get(Calendar.MONTH) + "-" + c.get(Calendar.DAY_OF_MONTH);
-		String time = c.get(Calendar.HOUR_OF_DAY) + "-" + c.get(Calendar.MINUTE) + "-" + c.get(Calendar.SECOND);
+//		String date = c.get(Calendar.YEAR) + "-" + c.get(Calendar.MONTH) + "-" + c.get(Calendar.DAY_OF_MONTH);
+//		String time = c.get(Calendar.HOUR_OF_DAY) + "-" + c.get(Calendar.MINUTE) + "-" + c.get(Calendar.SECOND);
 		
 		Backup backup = new Backup();
 //		backup.set_id(backupName + "-" + sessionId + "-" + date + "-" + time);
@@ -323,35 +324,6 @@ public class CCadaLoggerServlet extends HttpServlet {
 		return result;
 	}
 	
-	protected boolean hostAvailable(){
-		boolean result = true;
-		
-		Socket s;
-		
-		try {   
-			s = new Socket((String) hak.get("ipAddress"), (int) hak.get("port"));
-	        if(s.isConnected()){
-	        	s.close();    
-	        }               
-	    } 
-	    catch(UnknownHostException e){
-	    	// unknown host 
-	        result = false;
-	        s = null;
-	    } 
-	    catch (IOException e) {
-	    	// io exception, service probably not running 
-	        result = false;
-	        s = null;
-	    } 
-	    catch (NullPointerException e) {
-	        result = false;
-	        s=null;
-	    }
-		
-		return result;
-	}
-	
 	protected List<Position> getPositions(String logger){
 		
 		List<Position> result = new ArrayList<Position>();
@@ -360,8 +332,8 @@ public class CCadaLoggerServlet extends HttpServlet {
 
 	    try{
 	    	
-			InetAddress host = InetAddress.getByName( (String) hak.get("ipAddress")) ;
-			int port =  (int) hak.get("port");
+			InetAddress host = InetAddress.getByName( (String) hak.getCredentials().get(0).getIpAddress());
+			int port =  hak.getCredentials().get(0).getPort();
 
 			// Construct the socket
 			socket = new DatagramSocket() ;
@@ -374,10 +346,10 @@ public class CCadaLoggerServlet extends HttpServlet {
 			socket.send(packet) ;
 
 			// Set a receive timeout, 2000 milliseconds
-			socket.setSoTimeout(2000) ;
+			socket.setSoTimeout(2000);
 
 			// Prepare the packet for receive
-			int packetSize = (int) hak.get("packetSize");
+			int packetSize = hak.getCredentials().get(0).getPacketSize();
 			packet.setData(new byte[packetSize]) ;
 
 			// Wait for a response from the server

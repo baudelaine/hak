@@ -1,15 +1,9 @@
 package com.bpshparis.hak.ccadalogger;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +18,6 @@ import com.cloudant.client.api.ClientBuilder;
 import com.cloudant.client.api.CloudantClient;
 import com.cloudant.client.api.Database;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Application Lifecycle Listener implementation class ContextListener
@@ -39,7 +32,10 @@ public class ContextListener implements ServletContextListener {
 	Properties props = new Properties();
 	Database db;
 	CloudantClient dbClient;
-	Map<String, Object> hak = new HashMap<String, Object>();
+//	Map<String, Object> hak = new HashMap<String, Object>();
+	Resource hak = new Resource();
+	List<Resource> resources;
+	Map<String, Object> init = new HashMap<String, Object>();	
 	
     /**
      * Default constructor. 
@@ -54,31 +50,34 @@ public class ContextListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent arg0)  { 
          // TODO Auto-generated method stub
        	try {
-    			ic = new InitialContext();
-    			arg0.getServletContext().setAttribute("ic", ic);
-    			realPath = arg0.getServletContext().getRealPath("/"); 
-    	    	props.load(new FileInputStream(realPath + "/res/conf.properties"));
-    			arg0.getServletContext().setAttribute("props", props);
-    	    	
-    			System.out.println("Context has been initialized...");
-    			
-    			initVCAP_SERVICES();
-    			System.out.println("VCAP_SERVICES has been initialized...");
+			ic = new InitialContext();
+			arg0.getServletContext().setAttribute("ic", ic);
+			realPath = arg0.getServletContext().getRealPath("/"); 
+	    	props.load(new FileInputStream(realPath + "/res/conf.properties"));
+			arg0.getServletContext().setAttribute("props", props);
+	    	
+			System.out.println("Context has been initialized...");
+			
+			initVCAP_SERVICES();
+			System.out.println("VCAP_SERVICES has been initialized...");
 
-   				initDB();
-    			System.out.println("DB has been initialized...");
-				arg0.getServletContext().setAttribute("db", db);
-    			System.out.println("DBCLIENT has been initialized...");
-				arg0.getServletContext().setAttribute("dbClient", dbClient);
+			initDB();
+			System.out.println("DB has been initialized...");
+			arg0.getServletContext().setAttribute("db", db);
+			System.out.println("DBCLIENT has been initialized...");
+			arg0.getServletContext().setAttribute("dbClient", dbClient);
 
-   				initHAK();
-    			System.out.println("HAK has been initialized...");
-				arg0.getServletContext().setAttribute("hak", hak);
-   			
-    		} catch (Exception e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
-    		}    	
+			initHAK();
+			System.out.println("HAK has been initialized...");
+			arg0.getServletContext().setAttribute("hak", hak);
+		
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+       	finally {
+			arg0.getServletContext().setAttribute("init", init);
+		}       	
     }
 
 	/**
@@ -90,58 +89,61 @@ public class ContextListener implements ServletContextListener {
 		System.out.println("Context has been destroyed...");    	
     }
     
-    public void initVCAP_SERVICES() throws FileNotFoundException, IOException{
+    @SuppressWarnings("unchecked")
+	public void initVCAP_SERVICES() throws Exception{
     	
-    	String value = props.getProperty("VCAP_SERVICES");
-    	
-    	if(value != null && !value.trim().isEmpty()){
-			Path path = Paths.get(realPath + value);
-			Charset charset = StandardCharsets.UTF_8;
-			if(Files.exists(path)){
-				vcap_services = new String(Files.readAllBytes(path), charset);
-				System.out.println("VCAP_SERVICES read from " + value + ".");
-			}
-    	}
-    	else{
-    		vcap_services = System.getenv("VCAP_SERVICES");
-			System.out.println("VCAP_SERVICES read from System ENV.");
-    	}
+		vcap_services = System.getenv("VCAP_SERVICES");
+		System.out.println("VCAP_SERVICES read from System ENV.");
 
+		System.out.println("vcap_services=" + vcap_services);
+		
+		if(vcap_services == null) {
+			init.put("STATUS", "KO");
+			init.put("RESULT","Watson services are not reachable.");
+			init.put("TROUBLESHOOTING","VCAP_SERVICES environment variable should display something like: {\"0\":{\"credentials\":[{\"id\":\"0\",\"name\":\"Auto-generated service credentials\",\"apikey\":\"4Pe0RUDXt......");
+			String msg = "VCAP_SERVICES is null";
+			init.put("MSG", msg);
+			throw new Exception(msg);
+		}
+		
+		try {
+			Map<String, Resource> json = (Map<String, Resource>) Tools.fromJSON(vcap_services, new TypeReference<Map<String, Resource>>(){});
+			resources = Arrays.asList(json.values().toArray(new Resource[0]));
+			init.put("STATUS", "OK");
+			init.put("VCAP_SERVICES", json);
+		}
+		catch(Exception e) {
+			init.put("STATUS", "KO");
+			init.put("RESULT","Watson services are not reachable.");
+			init.put("TROUBLESHOOTING","VCAP_SERVICES environment variable should display something like: {\"0\":{\"credentials\":[{\"id\":\"0\",\"name\":\"Auto-generated service credentials\",\"apikey\":\"4Pe0RUDXt......");
+			String msg = "No valid resource were set.";
+			init.put("MSG", msg);
+			throw new Exception(msg);
+		}
     }
     
-    @SuppressWarnings("unchecked")
-	public void initDB(){
+    public void initDB(){
 
     	String serviceName = props.getProperty("CLOUDANT_NAME");
     	String dbname = props.getProperty("DB_NAME");
     	
-		ObjectMapper mapper = new ObjectMapper();
-		
 		String url = "";
-		String username = "";
-		String password = "";
+//		String username = "apikey";
+//		String password = "";
             	
 		try {
 		
-			Map<String, Object> input = mapper.readValue(vcap_services, new TypeReference<Map<String, Object>>(){});
 			
-			List<Map<String, Object>> l0s = (List<Map<String, Object>>) input.get(serviceName);
-			
-			for(Map<String, Object> l0: l0s){
-				for(Map.Entry<String, Object> e: l0.entrySet()){
-					if(e.getKey().equalsIgnoreCase("credentials")){
-						System.out.println(e.getKey() + "=" + e.getValue());
-						Map<String, Object> credential = (Map<String, Object>) e.getValue();
-						url = (String) credential.get("url");
-						username = (String) credential.get("username");
-						password = (String) credential.get("password");
-					}
+			for(Resource resource: resources) {
+				if(resource.getService().equalsIgnoreCase(serviceName)) {
+//					password = resource.getCredentials().get(0).getApikey();
+					url = resource.getCredentials().get(0).getUrl();
 				}
-			}
+			}			
 			
 			dbClient = ClientBuilder.url(new URL(url))
-			        .username(username)
-			        .password(password)
+//			        .username(username)
+//			        .password(password)
 			        .build();
 		
 			System.out.println("Server Version: " + dbClient.serverVersion());
@@ -158,47 +160,23 @@ public class ContextListener implements ServletContextListener {
     	
     }    
     
-    @SuppressWarnings("unchecked")
-	public void initHAK(){
+    public void initHAK(){
 
-    	String serviceName = props.getProperty("HAK_NAME");
-    	
-		ObjectMapper mapper = new ObjectMapper();
-		
-		String ipAddress = "";
-		int port = 0;
-		int packetSize = 0;
-		List<Object> loggers = new ArrayList<Object>();
-            	
-		try {
-		
-			Map<String, Object> input = mapper.readValue(vcap_services, new TypeReference<Map<String, Object>>(){});
-			
-			List<Map<String, Object>> l0s = (List<Map<String, Object>>) input.get(serviceName);
-			
-			for(Map<String, Object> l0: l0s){
-				for(Map.Entry<String, Object> e: l0.entrySet()){
-					if(e.getKey().equalsIgnoreCase("credentials")){
-						System.out.println(e.getKey() + "=" + e.getValue());
-						Map<String, Object> credential = (Map<String, Object>) e.getValue();
-						ipAddress = (String) credential.get("ipAddress");
-						port = (Integer) credential.get("port");
-						packetSize = (Integer) credential.get("packetSize");
-						loggers = (List<Object>) credential.get("loggers");
-					}
+    	try {
+    		
+	    	String serviceName = props.getProperty("HAK_NAME");
+	
+			for(Resource resource: resources) {
+				if(resource.getService().equalsIgnoreCase(serviceName)) {
+					hak = resource;
 				}
-			}
-			
-			hak.put("ipAddress", ipAddress);
-			hak.put("port", port);
-			hak.put("packetSize", packetSize);
-			hak.put("loggers", loggers);
-
-			System.out.println("Hear And Know service initialized: UDP://" + hak.get("ipAddress") + ":" + 
-					hak.get("port") + " with " + ( (List<Object>) hak.get("loggers")).size() + " loggers.");
+			}			
+	    	
+			System.out.println("Hear And Know service initialized: UDP://" + hak.getCredentials().get(0).getIpAddress() + ":" + 
+					hak.getCredentials().get(0).getPort() + " with " + ( hak.getCredentials().get(0).getLoggers().size() + " loggers."));
 			
 		}
-		catch(IOException e){
+		catch(Exception e){
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
