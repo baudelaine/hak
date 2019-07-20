@@ -4,9 +4,10 @@
 
 Install [Docker](<https://docs.docker.com/install/>)
 
+
 > On host
 
-Pull a Ubuntu, WebSphere Liberty Profile server image with ibmcloud and other tools...
+Pull an Ubuntu, WebSphere Liberty Profile server image with ibmcloud and other tools...
 
 ```
 sudo docker pull baudelaine/wlp:hak
@@ -88,4 +89,8 @@ stwlp
 
 > On host
 
+<<<<<<< HEAD
 :checkered_flag: ​Browse  [app](http://localhost/app)
+=======
+Browse  [app](http://localhost/app)
+>>>>>>> 0f69d16d796990471f3b6074e676be1f24e74f4b
