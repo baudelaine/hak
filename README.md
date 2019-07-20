@@ -2,6 +2,8 @@
 
 
 
+Install [Docker](<https://docs.docker.com/install/>)
+
 Host:
 
 	sudo docker search --filter=stars=10 ubuntu
@@ -74,6 +76,8 @@ Create Cloudant service instance
 Create Cloudant service key
 
 	ibmcloud resource service-key-create dbKey Manager --instance-name db
+
+
 
 
 

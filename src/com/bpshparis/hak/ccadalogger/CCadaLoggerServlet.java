@@ -9,6 +9,8 @@ import java.io.StringWriter;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -174,6 +176,12 @@ public class CCadaLoggerServlet extends HttpServlet {
 							Map<String, Object> map = ( (Map<String, Object>) reqParms.get("logger"));
 							String json = Tools.toJSON(map);
 							List<Position> positions = getPositions(json);
+							boolean demo = Boolean.parseBoolean(props.getProperty("DEMO"));
+							if(positions.size() == 0 && demo) {
+								Path path = Paths.get(request.getServletContext().getRealPath("/") + "/res/response.json");
+								Logger logger = (Logger) Tools.fromJSON(path.toFile(), new TypeReference<Logger>(){});
+								positions = logger.getPositions();
+							}
 							Logger logger = Tools.loggerFromJSON(new ByteArrayInputStream(json.getBytes()));
 							logger.setPositions(positions);
 							datas.put("RESPONSE", logger);

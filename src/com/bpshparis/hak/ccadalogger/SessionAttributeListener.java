@@ -1,15 +1,9 @@
 package com.bpshparis.hak.ccadalogger;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.servlet.annotation.WebListener;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionAttributeListener;
 import javax.servlet.http.HttpSessionBindingEvent;
-import javax.sql.DataSource;
 
 /**
  * Application Lifecycle Listener implementation class SessionAttributeListener

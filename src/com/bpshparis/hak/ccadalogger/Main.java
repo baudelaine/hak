@@ -1,13 +1,10 @@
 package com.bpshparis.hak.ccadalogger;
 
-import java.io.DataInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.Socket;
-import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -15,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -24,12 +22,30 @@ public class Main {
 
 	public static void main(String args[]) throws IOException{
 		
-		f3();
+		f4();
 
+	}
+	
+	public static void f4() throws IOException {
+		
+		Properties props = new Properties();
+		props.load(new FileInputStream("/home/fr054721/hak/WebContent/res/conf.properties"));
+		
+		boolean resp = Boolean.parseBoolean(props.getProperty("DEMO"));
+		
+		if(resp) {
+			System.out.println(resp);
+		}
+		
 	}
 	
 	public static void f3() throws IOException {
 
+		Path path = Paths.get("/home/fr054721/hak/WebContent/res/response.json");
+		Logger logger = (Logger) Tools.fromJSON(path.toFile(), new TypeReference<Logger>(){});
+
+		System.out.println(Tools.toJSON(logger.getPositions()));
+		
 	}
 	
 	public static void f2() throws IOException {

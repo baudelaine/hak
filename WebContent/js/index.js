@@ -228,10 +228,11 @@ function GetLoggerDatas(){
 			if (data.RESPONSE.positions.length == 0) {
 				ShowAlert("GetLoggerDatas()", "No data returned from logger.", "alert-info");
 			}
-
-			$table.bootstrapTable('append', data.RESPONSE);
-      $("span.glyphicons-server").removeClass('testko');
-      $("span.glyphicons-server").addClass('testok');
+      else{
+  			$table.bootstrapTable('append', data.RESPONSE);
+        $("span.glyphicons-server").removeClass('testko');
+        $("span.glyphicons-server").addClass('testok');
+      }
     },
     error: function(request, status, error) {
       console.log(request);

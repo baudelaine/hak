@@ -1,1 +1,30 @@
-{ "9a1c9a50-9561-4d66-a548-e419d55c7046": { "credentials": [ { "id": "2b2121b9-e8bb-479a-9b31-6e65399d332d", "name": "waKey", "apikey": "5nnVHXGPSDX83VcdwmIouGVHTkMEf38RLhwaXod1dxNN", "url": "https://gateway.watsonplatform.net/assistant/api", "role": "Manager" } ], "service": "conversation", "region": "us-south", "instance": "Watson Assistant-h9" }, "7f61f561-84c7-4cf5-ab5c-4e671c2002cf": { "credentials": [ { "id": "3e3eeae2-94bb-4b08-8608-ec4da8fe5feb", "name": "dbKey", "apikey": "CKNIEipxwEr8ZKPAJfgFYH8aE97fijjTRhQCORHISnvH", "url": "https://4dae83fe-b034-441c-a144-5d32d29f51b1-bluemix:a9a8fba8870db22b38dd567fd47608cf2bd27d6ab44b4353b9b68fd7b582ae2d@4dae83fe-b034-441c-a144-5d32d29f51b1-bluemix.cloudantnosqldb.appdomain.cloud", "role": "Manager" } ], "service": "cloudantnosqldb", "region": "eu-de", "instance": "db" }, "12345678": { "service": "UDPServer", "region": "", "instance": "hak", "credentials": [ { "id": "", "name": "", "apikey": "", "url": "", "role": "", "ipAddress": "193.251.53.223", "loggers": [ { "flag": 900, "uid": "MOBILI", "tid": "AC61D447924A", "positions": [] }, { "flag": 900, "uid": "MOBILI", "tid": "AC61D447924A", "positions": [] }, { "flag": 900, "uid": "MOBILI", "tid": "AC61D447924A", "positions": [] } ], "packetSize": 10000, "port": 5100 } ] } }
+{
+  "9a1c9a50-9561-4d66-a548-e419d55c7046": {
+    "credentials": [
+      {
+        "id": "2b2121b9-e8bb-479a-9b31-6e65399d332d",
+        "name": "waKey",
+        "apikey": "5nnVHXGPSDX83VcdwmIouGVHTkMEf38RLhwaXod1dxNN",
+        "url": "https://gateway.watsonplatform.net/assistant/api",
+        "role": "Manager"
+      }
+    ],
+    "service": "conversation",
+    "region": "us-south",
+    "instance": "Watson Assistant-h9"
+  },
+  "7f61f561-84c7-4cf5-ab5c-4e671c2002cf": {
+    "credentials": [
+      {
+        "id": "3e3eeae2-94bb-4b08-8608-ec4da8fe5feb",
+        "name": "dbKey",
+        "apikey": "CKNIEipxwEr8ZKPAJfgFYH8aE97fijjTRhQCORHISnvH",
+        "url": "https://4dae83fe-b034-441c-a144-5d32d29f51b1-bluemix:a9a8fba8870db22b38dd567fd47608cf2bd27d6ab44b4353b9b68fd7b582ae2d@4dae83fe-b034-441c-a144-5d32d29f51b1-bluemix.cloudantnosqldb.appdomain.cloud",
+        "role": "Manager"
+      }
+    ],
+    "service": "cloudantnosqldb",
+    "region": "eu-de",
+    "instance": "db"
+  }
+}
