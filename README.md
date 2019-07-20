@@ -4,9 +4,10 @@
 
 Install [Docker](<https://docs.docker.com/install/>)
 
+
 > On host
 
-Pull a Ubuntu, WebSphere Liberty Profile server image with ibmcloud and other tools...
+Pull an Ubuntu, WebSphere Liberty Profile server image with ibmcloud and other tools...
 
 ```
 sudo docker pull baudelaine/wlp:hak
