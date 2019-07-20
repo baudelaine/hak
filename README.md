@@ -88,4 +88,4 @@ stwlp
 
 > On host
 
-Browse  [app](http://localhost/app)
+:checkered_flag: ​Browse  [app](http://localhost/app)
