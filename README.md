@@ -89,8 +89,5 @@ stwlp
 
 > On host
 
-<<<<<<< HEAD
-:checkered_flag: ​Browse  [app](http://localhost/app)
-=======
-Browse  [app](http://localhost/app)
->>>>>>> 0f69d16d796990471f3b6074e676be1f24e74f4b
+:checkered_flag: Browse  [app](http://localhost/app)
+
