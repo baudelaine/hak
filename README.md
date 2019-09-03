@@ -10,7 +10,7 @@ Install [Docker](<https://docs.docker.com/install/>)
 Pull an Ubuntu, WebSphere Liberty Profile server image with ibmcloud and other tools...
 
 ```
-sudo docker pull baudelaine/wlp:hak
+sudo docker pull baudelaine/wlp
 ```
 
 Get application code from github
@@ -65,6 +65,12 @@ ibmcloud resource service-key-create dbKey Manager --instance-name db
 ```
 
 Set Cloudant credential and HAK UDP server parameters in **VCAP_SERVICES** environment variable
+
+Change to application code directory
+
+```
+cd hak
+```
 
 :warning: Be sure to run this command inside **/app** directory
 
