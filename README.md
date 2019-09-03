@@ -64,14 +64,13 @@ Create Cloudant service key
 ibmcloud resource service-key-create dbKey Manager --instance-name db
 ```
 
-Set Cloudant credential and HAK UDP server parameters in **VCAP_SERVICES** environment variable
-
 Change to application code directory
 
 ```
 cd hak
 ```
 
+Set Cloudant credential and HAK UDP server parameters in **VCAP_SERVICES** environment variable
 :warning: Be sure to run this command inside **/app** directory
 
 ```
