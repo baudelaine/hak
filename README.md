@@ -25,10 +25,10 @@ Change to application code directory
 cd hak
 ```
 
-Create hak container from baudelaine/wlp:hak image
+Create hak container from baudelaine/wlp image and share application code with container
 
 ```
-sudo docker run -p 80:9080 -tdi --name hak -v $PWD:/app baudelaine/wlp:hak
+sudo docker run -p 80:9080 -tdi --name hak -v $PWD:/app baudelaine/wlp
 ```
 
 Start container
